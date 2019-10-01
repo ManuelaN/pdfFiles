@@ -1,0 +1,69 @@
+package xmlToPdf;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class XmlData {
+	private  static ArrayList<String> data;
+	static File inputFile = new File("C:\\Users\\user\\Documents\\practica2019\\proiectPractica2019\\xmlTables.xml");
+	
+	public static ArrayList<String> ParserXmlData( String name){
+		data=new ArrayList<String>();
+		try {
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	        Document doc = dBuilder.parse(inputFile);
+	        doc.getDocumentElement().normalize();
+	        NodeList nList = doc.getElementsByTagName(name.toLowerCase());
+	        
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+	           Node nNode = nList.item(temp);
+	           
+	           if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+	              Element eElement = (Element) nNode;
+	              data.add((String)eElement.getAttribute("ID"));
+	              if(!(name.equalsIgnoreCase("comments"))) {
+	                data.add(eElement.getElementsByTagName("Name").item(0).getTextContent());
+	              }if(name.equalsIgnoreCase("user")) {
+	                data.add(eElement.getElementsByTagName("Role").item(0).getTextContent());
+	              }if(name.equalsIgnoreCase("books")) {
+	                 data.add(eElement.getElementsByTagName("Author").item(0).getTextContent());
+	                 data.add(eElement.getElementsByTagName("bookYear").item(0).getTextContent());}
+	              if(name.equalsIgnoreCase("product") || name.equalsIgnoreCase("p")) {
+	            	  data.add(eElement.getElementsByTagName("Quantity").item(0).getTextContent());
+	              }if(name.equalsIgnoreCase("comments")) {
+	            	  String[] d= {"MyUser", "Email", "Webpage", "Date", "Comments"};
+	            	  for(String row: d) {
+	            		  data.add(eElement.getElementsByTagName(row).item(0).getTextContent());
+	            	  }
+	              }
+	           }
+	         
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	public static void main(String[] args) {
+	try {
+      
+		ArrayList<String> arr=XmlData.ParserXmlData("comments");
+		 Iterator i = arr.iterator();
+		 while (i.hasNext()) 
+		   System.out.println(i.next());
+        
+     } catch (Exception e) {
+        e.printStackTrace();
+     }
+}
+}
