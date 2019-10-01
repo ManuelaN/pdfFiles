@@ -1,4 +1,4 @@
-package proiectPractica2019;
+package project;
 import java.sql.*;
 
 import java.util.ArrayList;
