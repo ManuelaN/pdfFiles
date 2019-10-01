@@ -1,0 +1,86 @@
+package xmlToPdf;
+
+
+//import com.itextpdf.test.annotations.WrapToTest;
+import java.io.File;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
+public class xmlToPDF{
+	
+	public static final String DEST
+    = "results/teamLMA/PdfTables.pdf";
+
+public static void main(String[] args) throws Exception {
+    File file = new File(DEST);
+    file.getParentFile().mkdirs();
+    new xmlToPDF().manipulatePdf(DEST);
+    /* Create a TransformerFactory object */           
+    
+}
+
+public void createPdf(String dest) throws IOException {
+    PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+    Document document = new Document(pdf);
+    document.add(new Paragraph("Hello World!"));
+    document.close();
+}
+public Cell createCell(String content, float borderWidth, int colspan, TextAlignment alignment) {
+    Cell cell = new Cell(1, colspan).add(new Paragraph(content));
+    cell.setTextAlignment(alignment);
+    cell.setBorder(new SolidBorder(borderWidth));
+    return cell;
+}
+
+protected void manipulatePdf(String dest) throws Exception {
+    PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
+    Document doc = new Document(pdfDoc);
+
+    xmlToPDF f=new xmlToPDF();
+    doc.add(new Paragraph("#Books"));
+    doc.add(f.PdfTableProductPUser(new String[] {"ID", "Name", "Author", "Book Year"}, XmlData.ParserXmlData("books")));
+    doc.add(new Paragraph("\n\n"));
+    doc.add(new Paragraph("#User"));
+    doc.add(f.PdfTableProductPUser(new String[] {"ID", "Name", "Role"}, XmlData.ParserXmlData("user")));
+    doc.add(new Paragraph("\n\n"));
+    doc.add(new Paragraph("#Product"));
+    doc.add(f.PdfTableProductPUser(new String[] {"ID", "Name", "Quantity"}, XmlData.ParserXmlData("product")));
+    doc.add(new Paragraph("\n\n"));
+    doc.add(new Paragraph("#P"));
+    doc.add(f.PdfTableProductPUser(new String[] {"ID", "Name", "Quantity"}, XmlData.ParserXmlData("p")));
+    doc.add(new Paragraph("\n\n"));
+    doc.add(new Paragraph("#Comments"));
+    doc.add(f.PdfTableProductPUser(new String[] {"ID", "myUser", "Email", "Webpage", "Date", "Comments"}, XmlData.ParserXmlData("comments")));
+    
+    
+ 
+    doc.close();
+    
+}
+
+private Table PdfTableProductPUser(String[] name1, ArrayList<String> arr) throws Exception {
+	  
+		 Table table = new Table(UnitValue.createPercentArray(name1.length));
+		
+		 for(String s: name1) {
+			 table.addCell(createCell(s, 2, 1, TextAlignment.LEFT));
+		 }
+		 
+		 Iterator i = arr.iterator();
+		 while (i.hasNext()) 
+		    table.addCell(createCell((String) i.next(), 1, 1, TextAlignment.LEFT));
+		
+		return table;
+}
+}
