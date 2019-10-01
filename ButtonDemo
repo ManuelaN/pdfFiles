@@ -11,7 +11,8 @@ import javax.swing.*;
 
 import com.itextpdf.io.IOException;
 
-import domCreateXML.CreateXMLFile;
+import createParserXML.CreateXMLFile;
+
 
 /* 
  * ButtonDemo.java requires the following files:
